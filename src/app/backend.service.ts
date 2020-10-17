@@ -54,6 +54,8 @@ export class BackendService {
     }
 
     public newTicket(payload: { description: string }): Observable<Ticket> {
+        console.log(payload.description);
+
         const newTicket: Ticket = {
             id: ++this.lastId,
             completed: false,

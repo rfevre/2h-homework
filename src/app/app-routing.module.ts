@@ -1,22 +1,23 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
+import { ListTicketsComponent } from './list-tickets/list-tickets.component';
+import { ViewTicketComponent } from './view-ticket/view-ticket.component';
 
 const routes: Routes = [
-  {
-    path: 'tickets',
-    component: AppComponent
-  },
-  {
-    path: 'tickets/:id',
-    component: AppComponent
-  },
   {
     path: '',
     redirectTo: '/tickets',
     pathMatch: 'full'
   },
+  {
+    path: 'tickets',
+    component: ListTicketsComponent
+  },
+  {
+    path: 'tickets/:id',
+    component: ViewTicketComponent
+  }
 ];
 
 @NgModule({

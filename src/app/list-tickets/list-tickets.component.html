@@ -1,0 +1,27 @@
+<div *ngIf="usersAndTickets$ | async as usersAndTickets; else loading">
+    <div class="row pb-4">
+        <div class="col-12">
+            <h2>Add ticket</h2>
+
+            <app-add-ticket [users]="usersAndTickets.users" (addTicketEvent)="addTicket($event)"></app-add-ticket>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h2>Tickets</h2>
+
+            <ul class="row list-unstyled">
+                <li class="col-4 pb-3" *ngFor="let ticket of usersAndTickets.tickets">
+                    <app-ticket [ticket]="ticket" [users]="usersAndTickets.users"
+                        (changeTicketAssigneeEvent)="changeTicketAssignee(ticket.id, $event)"
+                        (changeTicketCompletionEvent)="changeTicketCompletion(ticket.id, $event)">
+                    </app-ticket>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<ng-template #loading>
+    <app-loading></app-loading>
+</ng-template>

@@ -1,0 +1,36 @@
+<div *ngIf="user$ | async as user; else loading">
+    <div class="row">
+        <div class="col-12">
+            <h2>View ticket</h2>
+            <div class="card">
+                <h5 class="card-header">
+                    <div class="d-flex">
+                        <div class="pr-2">Ticket: {{ ticket.id }}</div>
+                        <div class="ml-auto">
+                            <span class="badge badge-warning" *ngIf="!ticket.completed">In progress</span>
+                            <span class="badge badge-success" *ngIf="ticket.completed">Completed</span>
+                        </div>
+                    </div>
+                </h5>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div>
+                            <label>Assignee user:</label>
+                            <p>{{ user.name }}</p>
+                        </div>
+                        <div>
+                            <label>Description:</label>
+                            <p>{{ ticket.description }}</p>
+                        </div>
+                    </div>
+
+                    <a [routerLink]="['/tickets']" class="btn btn-primary w-100">Return</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #loading>
+    <app-loading></app-loading>
+</ng-template>

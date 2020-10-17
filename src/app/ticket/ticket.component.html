@@ -13,8 +13,9 @@
             <div class="form-group">
                 <label for="selectAssigneeUser">Assignee user:</label>
                 <select class="form-control" id="selectAssigneeUser" (change)="selectOnChange($event.target.value)"> 
+                    <option [value]=""></option>
                     <option *ngFor="let user of users" [value]="user.id"
-                        [selected]="currentlyAssigneeUser.id === user.id">{{user.name}}</option>
+                        [selected]="currentlyAssigneeUser && currentlyAssigneeUser.id === user.id">{{user.name}}</option>
                 </select>
             </div>
             <p>{{ ticket.description }}</p>
@@ -22,7 +23,7 @@
 
         <div class="row">
             <div class="col-6">
-                <a href="#" class="btn btn-primary w-100">Edit</a>
+                <a [routerLink]="['/tickets', ticket.id]" class="btn btn-primary w-100">View</a>
             </div>
             <div class="col-6">
                 <button class="btn btn-success w-100" *ngIf="!ticket.completed"
