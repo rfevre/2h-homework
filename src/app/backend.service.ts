@@ -25,12 +25,12 @@ export class BackendService {
         {
             id: 1,
             completed: false,
-            assigneeId: 111,
+            assigneeId: 222,
             description: 'Move the desk to the new location'
         }
     ];
 
-    public storedUsers: User[] = [{ id: 111, name: 'Victor' }];
+    public storedUsers: User[] = [{ id: 111, name: 'Victor' }, {id: 222, name:'Jack Ouzi'}];
 
     private lastId: number = 1;
 
@@ -90,7 +90,7 @@ export class BackendService {
             return of(foundTicket).pipe(
                 delay(randomDelay()),
                 tap((ticket: Ticket) => {
-                    ticket.completed = true;
+                    ticket.completed = completed;
                 })
             );
         }
