@@ -21,7 +21,11 @@ export class AppComponent {
 
   constructor(private readonly backendService: BackendService) { }
 
-  getTicketAssigneeUser(ticket: Ticket, users: User[]) {
-    return users.find((user: User) => user.id === +ticket.assigneeId);
+  changeTicketCompletion(ticketId: number, completed: boolean) {
+    this.backendService.complete(ticketId, completed).toPromise();
+  }
+
+  changeTicketAssignee(ticketId: number, userId: number) {
+    this.backendService.assign(ticketId, userId).toPromise();
   }
 }

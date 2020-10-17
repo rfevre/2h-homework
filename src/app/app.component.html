@@ -6,7 +6,12 @@
             <div *ngIf="usersAndTickets$ | async as usersAndTickets; else loading">
                 <ul class="row list-unstyled">
                     <li class="col-4" *ngFor="let ticket of usersAndTickets.tickets">
-                        <app-ticket [ticket]="ticket" [user]="getTicketAssigneeUser(ticket, usersAndTickets.users)">
+                        <app-ticket 
+                            [ticket]="ticket" 
+                            [users]="usersAndTickets.users"
+                            (changeTicketAssigneeEvent)="changeTicketAssignee(ticket.id, $event)"
+                            (changeTicketCompletionEvent)="changeTicketCompletion(ticket.id, $event)"
+                        >
                         </app-ticket>
                     </li>
                 </ul>

@@ -3,20 +3,32 @@
         <div class="d-flex">
             <div class="pr-2">Ticket: {{ ticket.id }}</div>
             <div class="ml-auto">
-                <span class="badge badge-primary" *ngIf="!ticket.completed">In progress</span>
-                <span class="badge badge-Success" *ngIf="ticket.completed">Completed</span>
+                <span class="badge badge-warning" *ngIf="!ticket.completed">In progress</span>
+                <span class="badge badge-success" *ngIf="ticket.completed">Completed</span>
             </div>
         </div>
     </h5>
     <div class="card-body">
-        <h5 class="card-title">Assignee User: {{ user.name}}</h5>
-        <p class="card-text">{{ ticket.description }}</p>
+        <div class="card-text">
+            <div class="form-group">
+                <label for="selectAssigneeUser">Assignee user:</label>
+                <select class="form-control" id="selectAssigneeUser" (change)="selectOnChange($event.target.value)"> 
+                    <option *ngFor="let user of users" [value]="user.id"
+                        [selected]="currentlyAssigneeUser.id === user.id">{{user.name}}</option>
+                </select>
+            </div>
+            <p>{{ ticket.description }}</p>
+        </div>
+
         <div class="row">
             <div class="col-6">
                 <a href="#" class="btn btn-primary w-100">Edit</a>
             </div>
             <div class="col-6">
-                <button class="btn btn-primary w-100 btn-success">Complete</button>
+                <button class="btn btn-success w-100" *ngIf="!ticket.completed"
+                    (click)="changeTicketCompletion()">Complete</button>
+                <button class="btn btn-warning w-100" *ngIf="ticket.completed" (click)="changeTicketCompletion()">In
+                    progress</button>
             </div>
         </div>
     </div>
