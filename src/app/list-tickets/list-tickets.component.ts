@@ -10,6 +10,8 @@ import { BackendService } from '../backend.service';
 })
 export class ListTicketsComponent {
 
+  public searchId: string;
+
   public readonly usersAndTickets$ = forkJoin([this.backendService.users(), this.backendService.tickets()]).pipe(
     map(([users, tickets]) => ({
       users: users,

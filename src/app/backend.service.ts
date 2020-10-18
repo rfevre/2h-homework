@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import { Ticket } from '../interfaces/ticket.interface';
 import { User } from '../interfaces/user.interface';
+import { loadingEnd, loadingStart } from './ngrx/loading.actions';
 
 /**
  * This service acts as a mock back-end.
@@ -15,6 +17,9 @@ function randomDelay() {
 
 @Injectable()
 export class BackendService {
+
+    constructor(private store: Store<{ loading: boolean }>) { }
+
     public storedTickets: Ticket[] = [
         {
             id: 0,
@@ -54,6 +59,8 @@ export class BackendService {
     }
 
     public newTicket(payload: { description: string }): Observable<Ticket> {
+        this.store.dispatch(loadingStart());
+
         const newTicket: Ticket = {
             id: ++this.lastId,
             completed: false,
@@ -63,11 +70,15 @@ export class BackendService {
 
         return of(newTicket).pipe(
             delay(randomDelay()),
-            tap((ticket: Ticket) => this.storedTickets.push(ticket))
+            tap((ticket: Ticket) => {
+                this.storedTickets.push(ticket);
+                this.store.dispatch(loadingEnd());
+            })
         );
     }
 
     public assign(ticketId: number, userId: number): Observable<Ticket> {
+        this.store.dispatch(loadingStart());
         const user = this.findUserById(+userId);
         const foundTicket = this.findTicketById(+ticketId);
 
@@ -76,25 +87,30 @@ export class BackendService {
                 delay(randomDelay()),
                 tap((ticket: Ticket) => {
                     ticket.assigneeId = +userId;
+                    this.store.dispatch(loadingEnd());
                 })
             );
         }
 
+        this.store.dispatch(loadingEnd());
         return throwError(new Error('ticket or user not found'));
     }
 
     public complete(ticketId: number, completed: boolean): Observable<Ticket> {
         const foundTicket = this.findTicketById(+ticketId);
+        this.store.dispatch(loadingStart());
 
         if (foundTicket) {
             return of(foundTicket).pipe(
                 delay(randomDelay()),
                 tap((ticket: Ticket) => {
                     ticket.completed = completed;
+                    this.store.dispatch(loadingEnd());
                 })
             );
         }
 
+        this.store.dispatch(loadingEnd());
         return throwError(new Error('ticket not found'));
     }
 }

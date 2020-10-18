@@ -12,10 +12,11 @@
         <div class="card-text">
             <div class="form-group">
                 <label for="selectAssigneeUser">Assignee user:</label>
-                <select class="form-control" id="selectAssigneeUser" (change)="selectOnChange($event.target.value)"> 
+                <select class="form-control" id="selectAssigneeUser" (change)="selectOnChange($event.target.value)" appDisabledInputOnLoading>
                     <option [value]=""></option>
                     <option *ngFor="let user of users" [value]="user.id"
-                        [selected]="currentlyAssigneeUser && currentlyAssigneeUser.id === user.id">{{user.name}}</option>
+                        [selected]="currentlyAssigneeUser && currentlyAssigneeUser.id === user.id">{{user.name}}
+                    </option>
                 </select>
             </div>
             <p>{{ ticket.description }}</p>
@@ -26,9 +27,10 @@
                 <a [routerLink]="['/tickets', ticket.id]" class="btn btn-primary w-100">View</a>
             </div>
             <div class="col-6">
-                <button class="btn btn-success w-100" *ngIf="!ticket.completed"
-                    (click)="changeTicketCompletion()">Complete</button>
-                <button class="btn btn-warning w-100" *ngIf="ticket.completed" (click)="changeTicketCompletion()">In
+                <button class="btn btn-success w-100" *ngIf="!ticket.completed" (click)="changeTicketCompletion()"
+                    appDisabledInputOnLoading>Complete</button>
+                <button class="btn btn-warning w-100" *ngIf="ticket.completed" (click)="changeTicketCompletion()"
+                    appDisabledInputOnLoading>In
                     progress</button>
             </div>
         </div>

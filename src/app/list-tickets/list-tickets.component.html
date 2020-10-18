@@ -10,8 +10,14 @@
         <div class="col-12">
             <h2>Tickets</h2>
 
+            <div class="form-group">
+                <label for="searchById">Search ticket by id</label>
+                <input type="text" class="form-control" id="searchById"
+                    [(ngModel)]="searchId" placeholder="Enter id to search ticket">
+            </div>
+
             <ul class="row list-unstyled">
-                <li class="col-4 pb-3" *ngFor="let ticket of usersAndTickets.tickets">
+                <li class="col-4 pb-3" *ngFor="let ticket of usersAndTickets.tickets | filterTicketById: searchId">
                     <app-ticket [ticket]="ticket" [users]="usersAndTickets.users"
                         (changeTicketAssigneeEvent)="changeTicketAssignee(ticket.id, $event)"
                         (changeTicketCompletionEvent)="changeTicketCompletion(ticket.id, $event)">

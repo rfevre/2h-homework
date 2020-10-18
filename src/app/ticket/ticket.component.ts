@@ -11,10 +11,10 @@ import { User } from 'src/interfaces/user.interface';
 export class TicketComponent implements OnInit {
 
   @Input()
-  public readonly ticket: Ticket;
+  public ticket: Ticket;
 
   @Input()
-  public readonly users: User[];
+  public users: User[];
 
   @Output()
   public changeTicketCompletionEvent = new EventEmitter<boolean>();
@@ -31,7 +31,7 @@ export class TicketComponent implements OnInit {
   }
 
   getCurrentlyTicketAssigneeUser() {
-    return this.users.find((user: User) => user.id === +this.ticket.assigneeId);
+    return this.users ? this.users.find((user: User) => user.id === +this.ticket.assigneeId) : null;
   }
 
   changeTicketCompletion() {
