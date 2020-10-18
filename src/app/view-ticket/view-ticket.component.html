@@ -1,35 +1,45 @@
-<div *ngIf="user$ | async as user; else loading">
-    <div class="row">
-        <div class="col-12">
-            <h2>View ticket</h2>
-            <div class="card">
-                <h5 class="card-header">
-                    <div class="d-flex">
-                        <div class="pr-2">Ticket: {{ ticket.id }}</div>
-                        <div class="ml-auto">
-                            <span class="badge badge-warning" *ngIf="!ticket.completed">In progress</span>
-                            <span class="badge badge-success" *ngIf="ticket.completed">Completed</span>
+<div *ngIf="ticket$ | async as ticket; else loadingOrError">
+    <div *ngIf="user$ | async as user; else loadingOrError">
+        <div class="row">
+            <div class="col-12">
+                <h2>View ticket</h2>
+                <div class="card">
+                    <h5 class="card-header">
+                        <div class="d-flex">
+                            <div class="pr-2">Ticket: {{ ticket.id }}</div>
+                            <div class="ml-auto">
+                                <span class="badge badge-warning" *ngIf="!ticket.completed">In progress</span>
+                                <span class="badge badge-success" *ngIf="ticket.completed">Completed</span>
+                            </div>
                         </div>
-                    </div>
-                </h5>
-                <div class="card-body">
-                    <div class="card-text">
-                        <div>
-                            <label>Assignee user:</label>
-                            <p>{{ user.name }}</p>
+                    </h5>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div>
+                                <label>Assignee user:</label>
+                                <p>{{ user.name }}</p>
+                            </div>
+                            <div>
+                                <label>Description:</label>
+                                <p>{{ ticket.description }}</p>
+                            </div>
                         </div>
-                        <div>
-                            <label>Description:</label>
-                            <p>{{ ticket.description }}</p>
-                        </div>
-                    </div>
 
-                    <a [routerLink]="['/tickets']" class="btn btn-primary w-100">Return</a>
+                        <a [routerLink]="['/tickets']" class="btn btn-primary w-100">Return</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<ng-template #loadingOrError>
+    <div *ngIf="error; else loading" class="col-12 text-center">
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+    </div>
+</ng-template>
 
 <ng-template #loading>
     <app-loading></app-loading>

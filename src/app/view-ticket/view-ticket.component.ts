@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Ticket } from 'src/interfaces/ticket.interface';
 import { User } from 'src/interfaces/user.interface';
 import { BackendService } from '../backend.service';
@@ -12,24 +13,24 @@ import { BackendService } from '../backend.service';
 })
 export class ViewTicketComponent implements OnInit {
 
-  public ticket: Ticket;
+  public ticket$: Observable<Ticket>;
   public user$: Observable<User>;
+  public error: String;
 
   constructor(private readonly backendService: BackendService, private readonly route: ActivatedRoute) { }
-
-  /* TODO catch error et pas d'id */
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const id = +params['id'];
-      this.backendService.ticket(id).subscribe(result => {
-        this.ticket = result;
-        this.user$ = this.backendService.user(result.assigneeId);
-      });
+      this.ticket$ = this.backendService.ticket(id).pipe(
+        tap((ticket: Ticket) => {
+          if(ticket) {
+            this.user$ = this.backendService.user(ticket.assigneeId);
+          } else {
+            this.error = "ticket not found";
+          }
+        })
+      );
     });
-  }
-
-  getCurrentlyTicketAssigneeUser(userId: number): Promise<User> {
-    return this.backendService.user(userId).toPromise();
   }
 }
