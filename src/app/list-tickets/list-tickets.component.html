@@ -1,32 +1,34 @@
-<div *ngIf="usersAndTickets$ | async as usersAndTickets; else loading">
-    <div class="row pb-4">
-        <div class="col-12">
-            <h2>Add ticket</h2>
+<ng-container *ngIf="users$ | async as users; else loading">
+    <ng-container *ngIf="tickets$ | async as tickets; else loading">
+        <div class="row pb-4">
+            <div class="col-12">
+                <h2>Add ticket</h2>
 
-            <app-add-ticket [users]="usersAndTickets.users" (addTicketEvent)="addTicket($event)"></app-add-ticket>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <h2>Tickets</h2>
-
-            <div class="form-group">
-                <label for="searchById">Search ticket by id</label>
-                <input type="text" class="form-control" id="searchById"
-                    [(ngModel)]="searchId" placeholder="Enter id to search ticket">
+                <app-add-ticket [users]="users" (addTicketEvent)="addTicket($event)"></app-add-ticket>
             </div>
-
-            <ul class="row list-unstyled">
-                <li class="col-4 pb-3" *ngFor="let ticket of usersAndTickets.tickets | filterTicketById: searchId">
-                    <app-ticket [ticket]="ticket" [users]="usersAndTickets.users"
-                        (changeTicketAssigneeEvent)="changeTicketAssignee(ticket.id, $event)"
-                        (changeTicketCompletionEvent)="changeTicketCompletion(ticket.id, $event)">
-                    </app-ticket>
-                </li>
-            </ul>
         </div>
-    </div>
-</div>
+        <div class="row">
+            <div class="col-12">
+                <h2>Tickets</h2>
+
+                <div class="form-group">
+                    <label for="searchById">Search ticket by id</label>
+                    <input type="text" class="form-control" id="searchById" [(ngModel)]="searchId"
+                        placeholder="Enter id to search ticket">
+                </div>
+
+                <ul class="row list-unstyled">
+                    <li class="col-4 pb-3" *ngFor="let ticket of tickets | filterTicketById: searchId">
+                        <app-ticket [ticket]="ticket" [users]="users"
+                            (changeTicketAssigneeEvent)="changeTicketAssignee(ticket.id, $event)"
+                            (changeTicketCompletionEvent)="changeTicketCompletion(ticket.id, $event)">
+                        </app-ticket>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </ng-container>
+</ng-container>
 
 <ng-template #loading>
     <app-loading></app-loading>

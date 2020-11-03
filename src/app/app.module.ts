@@ -14,10 +14,17 @@ import { StoreModule } from '@ngrx/store';
 import { loadingReducer } from './ngrx/loading.reducer';
 import { DisabledInputOnLoadingDirective } from './directive/disabled-input-on-loading.directive';
 import { FilterTycketByIdPipe } from './pipe/filter-ticket-by-id.pipe';
+import { EffectsModule } from '@ngrx/effects';
+import { LoadingEffects } from './ngrx/loading.effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
     declarations: [AppComponent, LoadingComponent, TicketComponent, AddTicketComponent, ViewTicketComponent, ListTicketsComponent, DisabledInputOnLoadingDirective, FilterTycketByIdPipe],
-    imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule, RouterModule, StoreModule.forRoot({ loading: loadingReducer })],
+    imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule, RouterModule,
+        StoreModule.forRoot({ loadingData : loadingReducer }),
+        EffectsModule.forRoot([LoadingEffects]),
+        StoreDevtoolsModule.instrument()
+    ],
     providers: [BackendService],
     bootstrap: [AppComponent]
 })
