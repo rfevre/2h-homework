@@ -1,5 +1,5 @@
-<div *ngIf="ticket$ | async as ticket; else loadingOrError">
-    <div *ngIf="user$ | async as user; else loadingOrError">
+<ng-container *ngIf="ticket$ | async as ticket; else loadingOrError">
+    <ng-container *ngIf="user$ | async as user; else loadingOrError">
         <div class="row">
             <div class="col-12">
                 <h2>View ticket</h2>
@@ -30,8 +30,8 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </ng-container>
+</ng-container>
 
 <ng-template #loadingOrError>
     <div *ngIf="error; else loading" class="col-12 text-center">
