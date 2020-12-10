@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { forkJoin, Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DataState, selectAllTickets, selectAllUsers } from 'src/app/ngrx/data.reducer';
+import * as TicketActions from 'src/app/ngrx/ticket/ticket.actions';
+import * as UserActions from 'src/app/ngrx/user/user.actions';
 import { Ticket } from 'src/interfaces/ticket.interface';
 import { User } from 'src/interfaces/user.interface';
-import { BackendService } from '../backend.service';
-import { loadTickets, loadUsers } from '../ngrx/loading.actions';
-import { IState } from '../ngrx/loading.reducer';
+
+interface ListTicketsData {
+  tickets: Ticket[],
+  users: User[]
+}
 
 @Component({
   selector: 'app-list-tickets',
@@ -17,14 +22,26 @@ export class ListTicketsComponent implements OnInit {
 
   public searchId: string;
 
-  tickets$: Observable<Ticket[]> = this.store.select(state => state.loadingData.tickets);
-  users$: Observable<User[]> = this.store.select(state => state.loadingData.users);
+  data$: Observable<ListTicketsData>;
 
-  constructor(private store: Store<{ loadingData: IState }>) { }
+  constructor(private store: Store<DataState>) { }
 
   ngOnInit() {
-    this.store.dispatch({ type: loadTickets.type });
-    this.store.dispatch({ type: loadUsers.type });
+    this.store.dispatch(TicketActions.startLoadTickets());
+    this.store.dispatch(UserActions.startLoadUsers());
+
+    const tickets$: Observable<Ticket[]> = this.store.select(selectAllTickets);
+    const users$: Observable<User[]> = this.store.select(selectAllUsers);
+
+    this.data$ = combineLatest([tickets$, users$])
+      .pipe(
+        map(([tickets, users]) => {
+          return {
+            tickets,
+            users
+          }
+        })
+      );
   }
 
   changeTicketCompletion(ticketId: number, completed: boolean) {

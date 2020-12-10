@@ -1,38 +1,41 @@
-<div class="card">
-    <h5 class="card-header">
-        <div class="d-flex">
-            <div class="pr-2">Ticket: {{ ticket.id }}</div>
-            <div class="ml-auto">
-                <span class="badge badge-warning" *ngIf="!ticket.completed">In progress</span>
-                <span class="badge badge-success" *ngIf="ticket.completed">Completed</span>
+<ng-container *ngIf="(data$ | async) as data">
+    <div class="card">
+        <h5 class="card-header">
+            <div class="d-flex">
+                <div class="pr-2">Ticket: {{ ticket.id }}</div>
+                <div class="ml-auto">
+                    <span class="badge badge-warning" *ngIf="!ticket.completed">In progress</span>
+                    <span class="badge badge-success" *ngIf="ticket.completed">Completed</span>
+                </div>
             </div>
-        </div>
-    </h5>
-    <div class="card-body">
-        <div class="card-text">
-            <div class="form-group">
-                <label for="selectAssigneeUser">Assignee user:</label>
-                <select class="form-control" id="selectAssigneeUser" (change)="selectOnChange($event.target.value)" appDisabledInputOnLoading>
-                    <option [value]=""></option>
-                    <option *ngFor="let user of users" [value]="user.id"
-                        [selected]="currentlyAssigneeUser && currentlyAssigneeUser.id === user.id">{{user.name}}
-                    </option>
-                </select>
+        </h5>
+        <div class="card-body">
+            <div class="card-text">
+                <div class="form-group">
+                    <label for="selectAssigneeUser">Assignee user:</label>
+                    <select class="form-control" id="selectAssigneeUser" (change)="selectOnChange($event.target.value)"
+                        appDisabledInputOnLoading>
+                        <option [value]=""></option>
+                        <option *ngFor="let user of data.users" [value]="user.id"
+                            [selected]="data.currentlyAssigneeUser && data.currentlyAssigneeUser.id === user.id">{{user.name}}
+                        </option>
+                    </select>
+                </div>
+                <p>{{ ticket.description }}</p>
             </div>
-            <p>{{ ticket.description }}</p>
-        </div>
 
-        <div class="row">
-            <div class="col-6">
-                <a [routerLink]="['/tickets', ticket.id]" class="btn btn-primary w-100">View</a>
-            </div>
-            <div class="col-6">
-                <button class="btn btn-success w-100" *ngIf="!ticket.completed" (click)="changeTicketCompletion()"
-                    appDisabledInputOnLoading>Complete</button>
-                <button class="btn btn-warning w-100" *ngIf="ticket.completed" (click)="changeTicketCompletion()"
-                    appDisabledInputOnLoading>In
-                    progress</button>
+            <div class="row">
+                <div class="col-6">
+                    <a [routerLink]="['/tickets', ticket.id]" class="btn btn-primary w-100">View</a>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-success w-100" *ngIf="!ticket.completed" (click)="changeTicketCompletion()"
+                        appDisabledInputOnLoading>Complete</button>
+                    <button class="btn btn-warning w-100" *ngIf="ticket.completed" (click)="changeTicketCompletion()"
+                        appDisabledInputOnLoading>In
+                        progress</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</ng-container>

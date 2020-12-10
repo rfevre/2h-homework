@@ -1,33 +1,29 @@
-<ng-container *ngIf="users$ | async as users; else loading">
-    <ng-container *ngIf="tickets$ | async as tickets; else loading">
-        <div class="row pb-4">
-            <div class="col-12">
-                <h2>Add ticket</h2>
+<ng-container *ngIf="data$ | async as data; else loading">
+    <div class="row pb-4">
+        <div class="col-12">
+            <h2>Add ticket</h2>
 
-                <app-add-ticket [users]="users" (addTicketEvent)="addTicket($event)"></app-add-ticket>
-            </div>
+            <app-add-ticket [users]="data.users" (addTicketEvent)="addTicket($event)"></app-add-ticket>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <h2>Tickets</h2>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h2>Tickets</h2>
 
-                <div class="form-group">
-                    <label for="searchById">Search ticket by id</label>
-                    <input type="text" class="form-control" id="searchById" [(ngModel)]="searchId"
-                        placeholder="Enter id to search ticket">
-                </div>
-
-                <ul class="row list-unstyled">
-                    <li class="col-4 pb-3" *ngFor="let ticket of tickets | filterTicketById: searchId">
-                        <app-ticket [ticket]="ticket" [users]="users"
-                            (changeTicketAssigneeEvent)="changeTicketAssignee(ticket.id, $event)"
-                            (changeTicketCompletionEvent)="changeTicketCompletion(ticket.id, $event)">
-                        </app-ticket>
-                    </li>
-                </ul>
+            <div class="form-group">
+                <label for="searchById">Search ticket by id</label>
+                <input type="text" class="form-control" id="searchById" [(ngModel)]="searchId"
+                    placeholder="Enter id to search ticket">
             </div>
+
+            <ul class="row list-unstyled">
+                <li class="col-4 pb-3" *ngFor="let ticket of data.tickets | filterTicketById: searchId">
+                    <app-ticket [ticket]="ticket">
+                    </app-ticket>
+                </li>
+            </ul>
         </div>
-    </ng-container>
+    </div>
 </ng-container>
 
 <ng-template #loading>

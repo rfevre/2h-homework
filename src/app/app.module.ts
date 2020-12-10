@@ -2,27 +2,28 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AddTicketComponent } from './add-ticket/add-ticket.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BackendService } from './backend.service';
+import { DisabledInputOnLoadingDirective } from './directive/disabled-input-on-loading.directive';
+import { ListTicketsComponent } from './list-tickets/list-tickets.component';
 import { LoadingComponent } from './loading/loading.component';
+import { dataReducers } from './ngrx/data.reducer';
+import { TicketEffects } from './ngrx/ticket/ticket.effects';
+import { UserEffects } from './ngrx/user/user.effects';
+import { FilterTycketByIdPipe } from './pipe/filter-ticket-by-id.pipe';
 import { TicketComponent } from './ticket/ticket.component';
 import { ViewTicketComponent } from './view-ticket/view-ticket.component';
-import { ListTicketsComponent } from './list-tickets/list-tickets.component';
-import { StoreModule } from '@ngrx/store';
-import { loadingReducer } from './ngrx/loading.reducer';
-import { DisabledInputOnLoadingDirective } from './directive/disabled-input-on-loading.directive';
-import { FilterTycketByIdPipe } from './pipe/filter-ticket-by-id.pipe';
-import { EffectsModule } from '@ngrx/effects';
-import { LoadingEffects } from './ngrx/loading.effects';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
     declarations: [AppComponent, LoadingComponent, TicketComponent, AddTicketComponent, ViewTicketComponent, ListTicketsComponent, DisabledInputOnLoadingDirective, FilterTycketByIdPipe],
     imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule, RouterModule,
-        StoreModule.forRoot({ loadingData : loadingReducer }),
-        EffectsModule.forRoot([LoadingEffects]),
+        StoreModule.forRoot(dataReducers),
+        EffectsModule.forRoot([TicketEffects, UserEffects]),
         StoreDevtoolsModule.instrument()
     ],
     providers: [BackendService],

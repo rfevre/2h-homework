@@ -1,7 +1,15 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { tick } from '@angular/core/testing';
+import { Component, Input, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { combineLatest, Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { Ticket } from 'src/interfaces/ticket.interface';
 import { User } from 'src/interfaces/user.interface';
+import { DataState, selectAllUsers, selectUserByAssigneeId } from '../ngrx/data.reducer';
+
+interface TicketData {
+  users: User[],
+  currentlyAssigneeUser: User
+}
 
 @Component({
   selector: 'app-ticket',
@@ -13,33 +21,32 @@ export class TicketComponent implements OnInit {
   @Input()
   public ticket: Ticket;
 
-  @Input()
-  public users: User[];
+  public data$: Observable<TicketData>;
 
-  @Output()
-  public changeTicketCompletionEvent = new EventEmitter<boolean>();
-
-  @Output()
-  public changeTicketAssigneeEvent = new EventEmitter<number>();
-
-  public currentlyAssigneeUser: User;
-
-  constructor() { }
+  constructor(private store: Store<DataState>) { }
 
   ngOnInit(): void {
-    this.currentlyAssigneeUser = this.getCurrentlyTicketAssigneeUser();
-  }
+    const currentlyAssigneeUser$: Observable<User> = this.store.select(selectUserByAssigneeId, this.ticket.assigneeId);
+    const users$: Observable<User[]> = this.store.select(selectAllUsers);
 
-  getCurrentlyTicketAssigneeUser() {
-    return this.users ? this.users.find((user: User) => user.id === +this.ticket.assigneeId) : null;
+    this.data$ = combineLatest([users$, currentlyAssigneeUser$])
+      .pipe(
+        map(([users, currentlyAssigneeUser]) => {
+          return {
+            users,
+            currentlyAssigneeUser
+          }
+        }),
+        tap(console.log)
+      );
   }
 
   changeTicketCompletion() {
-    this.changeTicketCompletionEvent.emit(!this.ticket.completed);
+    //this.changeTicketCompletionEvent.emit(!this.ticket.completed);
   }
 
   selectOnChange(userId: number) {
-    this.changeTicketAssigneeEvent.emit(userId);
+    //this.changeTicketAssigneeEvent.emit(userId);
   }
 
 }

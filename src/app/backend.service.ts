@@ -33,7 +33,7 @@ export class BackendService {
         }
     ];
 
-    public storedUsers: User[] = [{ id: 111, name: 'Victor' }, { id: 222, name: 'Jack Ouzi' }];
+    public storedUsers: User[] = [{ id: 111, name: 'Agathe Feeling' }, { id: 222, name: 'Jack Ouzi' }];
 
     private lastId: number = 1;
 
