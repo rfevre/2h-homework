@@ -2,9 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { Ticket } from 'src/interfaces/ticket.interface';
-import { User } from 'src/interfaces/user.interface';
-import { DataState, selectAllUsers, selectUserByAssigneeId } from '../ngrx/data.reducer';
+import { Ticket } from 'src/model/ticket.interface';
+import { User } from 'src/model/user.interface';
+import { DataState, selectAllUsers, selectUserByAssigneeId } from '../../ngrx/data.reducer';
+import * as TicketActions from '../../ngrx/ticket/ticket.actions';
 
 interface TicketData {
   users: User[],
@@ -36,17 +37,16 @@ export class TicketComponent implements OnInit {
             users,
             currentlyAssigneeUser
           }
-        }),
-        tap(console.log)
+        })
       );
   }
 
   changeTicketCompletion() {
-    //this.changeTicketCompletionEvent.emit(!this.ticket.completed);
+    this.store.dispatch(TicketActions.startCompletTicket({ ticketId: this.ticket.id, completed: !this.ticket.completed }))
   }
 
   selectOnChange(userId: number) {
-    //this.changeTicketAssigneeEvent.emit(userId);
+    this.store.dispatch(TicketActions.startAssignTicket({ ticketId: this.ticket.id, userId: userId }))
   }
 
 }

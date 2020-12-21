@@ -1,9 +1,8 @@
-<ng-container *ngIf="data$ | async as data; else loading">
+<ng-container *ngIf="tickets$ | async as tickets; else loading">
     <div class="row pb-4">
         <div class="col-12">
             <h2>Add ticket</h2>
-
-            <app-add-ticket [users]="data.users" (addTicketEvent)="addTicket($event)"></app-add-ticket>
+            <app-add-ticket></app-add-ticket>
         </div>
     </div>
     <div class="row">
@@ -17,7 +16,7 @@
             </div>
 
             <ul class="row list-unstyled">
-                <li class="col-4 pb-3" *ngFor="let ticket of data.tickets | filterTicketById: searchId">
+                <li class="col-4 pb-3" *ngFor="let ticket of tickets | filterTicketById: searchId">
                     <app-ticket [ticket]="ticket">
                     </app-ticket>
                 </li>

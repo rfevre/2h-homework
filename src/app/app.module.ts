@@ -5,19 +5,19 @@ import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { AddTicketComponent } from './add-ticket/add-ticket.component';
+import { AddTicketComponent } from './components/add-ticket/add-ticket.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BackendService } from './backend.service';
 import { DisabledInputOnLoadingDirective } from './directive/disabled-input-on-loading.directive';
-import { ListTicketsComponent } from './list-tickets/list-tickets.component';
-import { LoadingComponent } from './loading/loading.component';
+import { ListTicketsComponent } from './components/list-tickets/list-tickets.component';
+import { LoadingComponent } from './components/loading/loading.component';
 import { dataReducers } from './ngrx/data.reducer';
 import { TicketEffects } from './ngrx/ticket/ticket.effects';
 import { UserEffects } from './ngrx/user/user.effects';
 import { FilterTycketByIdPipe } from './pipe/filter-ticket-by-id.pipe';
-import { TicketComponent } from './ticket/ticket.component';
-import { ViewTicketComponent } from './view-ticket/view-ticket.component';
+import { TicketComponent } from './components/ticket/ticket.component';
+import { ViewTicketComponent } from './components/view-ticket/view-ticket.component';
 
 @NgModule({
     declarations: [AppComponent, LoadingComponent, TicketComponent, AddTicketComponent, ViewTicketComponent, ListTicketsComponent, DisabledInputOnLoadingDirective, FilterTycketByIdPipe],

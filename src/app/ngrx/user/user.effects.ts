@@ -16,7 +16,7 @@ export class UserEffects {
                 map(users => UserActions.loadUsers({ users })),
                 catchError(() => EMPTY)
             ))
-    ));
+    ), {dispatch: false});
 
     constructor(
         private actions$: Actions,

@@ -1,30 +1,51 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { User } from 'src/model/user.interface';
 import { TicketComponent } from './ticket.component';
-
+import { DataState, selectAllUsers, selectUserByAssigneeId } from '../../ngrx/data.reducer';
 
 describe('TicketComponent', () => {
   let component: TicketComponent;
   let fixture: ComponentFixture<TicketComponent>;
+  let store: MockStore;
 
-  let user = {
+  let user: User = {
     id: 0,
     name: 'testName'
   };
 
-  let otherUser = {
+  let otherUser: User = {
     id: 1,
     name: 'otherTestName'
   }
 
+  const initialState: DataState = {
+    users: {
+      entities: undefined,
+      callState:  undefined,
+      ids: undefined
+    },
+    tickets: {
+      entities: undefined,
+      callState:  undefined,
+      ids: undefined
+    }
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TicketComponent]
-    })
-      .compileComponents();
+      declarations: [TicketComponent],
+      providers: [
+        provideMockStore({ initialState }),
+      ]
+    }).compileComponents();
+
+    store = TestBed.inject(MockStore);
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TicketComponent);
+
     component = fixture.componentInstance;
     component.ticket = {
       id: 0,
@@ -32,8 +53,11 @@ describe('TicketComponent', () => {
       assigneeId: 0,
       description: "description"
     };
-    component.users = [user, otherUser];
-    component.currentlyAssigneeUser = user;
+
+    selectUserByAssigneeId.setResult(user);
+    selectAllUsers.setResult([user, otherUser]);
+
+    store.refreshState();
     fixture.detectChanges();
   });
 

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Ticket } from 'src/interfaces/ticket.interface';
+import { Ticket } from 'src/model/ticket.interface';
 
 @Pipe({
   name: 'filterTicketById'

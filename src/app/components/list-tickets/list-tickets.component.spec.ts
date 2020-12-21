@@ -1,21 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { Ticket } from 'src/interfaces/ticket.interface';
-import { BackendService } from '../backend.service';
-import { FilterTycketByIdPipe } from '../pipe/filter-ticket-by-id.pipe';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { Ticket } from 'src/model/ticket.interface';
+import { FilterTycketByIdPipe } from '../../pipe/filter-ticket-by-id.pipe';
 import { ListTicketsComponent } from './list-tickets.component';
+import { DataState, selectAllTickets } from 'src/app/ngrx/data.reducer';
 
 describe('ListTicketsComponent', () => {
   let component: ListTicketsComponent;
   let fixture: ComponentFixture<ListTicketsComponent>;
-  let mockBackendService;
+  let store: MockStore;
 
-  let user = {
-    id: 0,
-    name: 'testName'
-  };
-
-  
   let ticket: Ticket = {
     assigneeId: 0,
     completed: false,
@@ -23,23 +17,37 @@ describe('ListTicketsComponent', () => {
     id: 0
   }
 
-  beforeEach(async () => {
-    mockBackendService = jasmine.createSpyObj(['tickets', 'users']);
-    mockBackendService.tickets.and.returnValue(of([ticket]));
-    mockBackendService.users.and.returnValue(of([user]));
+  const initialState: DataState = {
+    users: {
+      entities: undefined,
+      callState:  undefined,
+      ids: undefined
+    },
+    tickets: {
+      entities: undefined,
+      callState:  undefined,
+      ids: undefined
+    }
+  };
 
+  beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ListTicketsComponent, FilterTycketByIdPipe],
       providers: [
-        { provide: BackendService, useValue: mockBackendService }
+        provideMockStore({ initialState }),
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
+
+    store = TestBed.inject(MockStore);
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ListTicketsComponent);
+
     component = fixture.componentInstance;
+    selectAllTickets.setResult([ticket]);
+
+    store.refreshState();
     fixture.detectChanges();
   });
 
@@ -47,7 +55,4 @@ describe('ListTicketsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load all tickets', () => {
-    expect(mockBackendService.tickets).toHaveBeenCalled();
-  });
 });

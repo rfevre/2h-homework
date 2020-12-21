@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
-import { Ticket } from '../interfaces/ticket.interface';
-import { User } from '../interfaces/user.interface';
+import { Ticket } from '../model/ticket.interface';
+import { User } from '../model/user.interface';
 
 /**
  * This service acts as a mock back-end.
@@ -57,6 +57,7 @@ export class BackendService {
     }
 
     public newTicket(payload: { description: string }): Observable<Ticket> {
+        
         const newTicket: Ticket = {
             id: ++this.lastId,
             completed: false,
@@ -67,7 +68,9 @@ export class BackendService {
         return of(newTicket).pipe(
             delay(randomDelay()),
             tap((ticket: Ticket) => {
-                this.storedTickets.push(ticket);
+                const storedTicketsClone = Object.assign([], this.storedTickets);
+                storedTicketsClone.push(ticket);
+                this.storedTickets = storedTicketsClone;
             })
         );
     }
@@ -77,10 +80,18 @@ export class BackendService {
         const foundTicket = this.findTicketById(+ticketId);
 
         if (foundTicket && user) {
-            return of(foundTicket).pipe(
+            const result: Ticket = Object.assign({}, foundTicket);
+            return of(result).pipe(
                 delay(randomDelay()),
                 tap((ticket: Ticket) => {
                     ticket.assigneeId = +userId;
+                    const storedTicketsClone = Object.assign([], this.storedTickets);
+                    const index = storedTicketsClone.findIndex(ticketFind => ticketFind.id === ticket.id);
+                    if (index > -1) {
+                        storedTicketsClone.splice(index, 1);
+                        storedTicketsClone.push(ticket)
+                    }
+                    this.storedTickets = storedTicketsClone;
                 })
             );
         }
@@ -91,10 +102,18 @@ export class BackendService {
         const foundTicket = this.findTicketById(+ticketId);
 
         if (foundTicket) {
-            return of(foundTicket).pipe(
+            const result: Ticket = Object.assign({}, foundTicket);
+            return of(result).pipe(
                 delay(randomDelay()),
                 tap((ticket: Ticket) => {
                     ticket.completed = completed;
+                    const storedTicketsClone = Object.assign([], this.storedTickets);
+                    const index = storedTicketsClone.findIndex(ticketFind => ticketFind.id === ticket.id);
+                    if (index > -1) {
+                        storedTicketsClone.splice(index, 1);
+                        storedTicketsClone.push(ticket)
+                    }
+                    this.storedTickets = storedTicketsClone;
                 })
             );
         }

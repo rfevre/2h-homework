@@ -1,18 +1,20 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Action, createReducer, createSelector, on } from '@ngrx/store';
-import { User } from 'src/interfaces/user.interface';
+import { CallState } from 'src/model/call-state.type';
+import { LoadingState } from 'src/model/loading-state.enum';
+import { User } from 'src/model/user.interface';
 import * as UserActions from './user.actions';
 
 export interface UserState extends EntityState<User> {
     // additional entities state properties
-    isLoading: boolean;
+    callState: CallState
 }
 
 export const userAdapter: EntityAdapter<User> = createEntityAdapter<User>();
 
 export const userInitialState: UserState = userAdapter.getInitialState({
     // additional entity state properties
-    isLoading: false,
+    callState: LoadingState.INIT,
 });
 
 const userReducer = createReducer(
@@ -20,13 +22,13 @@ const userReducer = createReducer(
     on(UserActions.startLoadUsers, (state) => {
         return {
             ...state,
-            isLoading: true
+            callState: LoadingState.LOADING
         }
     }),
     on(UserActions.loadUsers, (state, { users }) => {
         return userAdapter.setAll(users, {
             ...state,
-            isLoading: false
+            callState: LoadingState.LOADED
         })
     }),
 );
@@ -36,13 +38,9 @@ export function reducer(state: UserState | undefined, action: Action) {
 }
 
 // get the selectors
-const {
+export const {
+    selectIds,
     selectEntities,
     selectAll,
+    selectTotal,
 } = userAdapter.getSelectors();
-
-// select the dictionary of user entities
-export const selectUserEntities = selectEntities;
-
-// select the array of users
-export const selectAllUsers = selectAll;
